@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]        # ← main へ push 時に実行
 
 permissions:
   contents: read
@@ -18,38 +18,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # 以降の run: ステップをすべて vue-app/ で実行
-    defaults:
-      run:
-        working-directory: vue-app
-
     steps:
-      # 1) ソースをチェックアウト
+      # ① ソース取得
       - uses: actions/checkout@v4
 
-      # 2) Node をセットアップ（キャッシュ行を削除）
+      # ② Node セットアップ（依存キャッシュは後からでも追加可）
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3) 依存インストール
+      # ③ 依存インストール
       - name: Install dependencies
         run: npm ci
 
-      # 4) Tailwind 依存確認（任意）
+      # ④ Tailwind 依存確認（デバッグ用。不要なら削除可）
       - name: Check Tailwind dependencies
         run: npm ls tailwindcss @tailwindcss/postcss
 
-      # 5) ビルド
+      # ⑤ ビルド
       - name: Build
-        run: npm run build
+        run: npm run build        # → dist/ が生成される
 
-      # 6) dist を GitHub Pages 用アーティファクトとしてアップロード
+      # ⑥ dist を GitHub Pages 用アーティファクトとしてアップロード
       - name: Upload dist
         uses: actions/upload-pages-artifact@v3
         with:
-          path: vue-app/dist          # ← ルートからの相対パス
+          path: dist              # ルート直下の dist を指定
 
   deploy:
     needs: build
