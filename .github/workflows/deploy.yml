@@ -48,6 +48,18 @@ jobs:
         run: |
           grep -Eo 'href="[^"]+\.css"|src="[^"]+\.js"' dist/index.html | head
 
+      # 6-A) 生成 CSS ファイルのサイズを表示
+      - name: Show CSS size (debug)
+        run: ls -lh dist/assets | grep '\.css$'
+
+      # 6-B) Tailwind 代表クラスを 3 つだけ grep
+      - name: Check Tailwind classes (debug)
+        run: |
+          grep -q 'bg-green-500' dist/assets/*.css && echo '✅ bg-green-500 found'
+          grep -q 'text-4xl'     dist/assets/*.css && echo '✅ text-4xl found'
+          grep -q 'container'     dist/assets/*.css && echo '✅ container found'
+
+
       # 7) dist を Pages 用アーティファクトとしてアップロード
       - name: Upload dist
         uses: actions/upload-pages-artifact@v3
