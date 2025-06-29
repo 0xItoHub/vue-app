@@ -1,0 +1,39 @@
+{
+  "start": {
+    "message": "こんにちは！自己紹介を始めましょうか？",
+    "options": [
+      { "label": "はい", "next": "intro" },
+      { "label": "また今度", "next": "end" }
+    ]
+  },
+  "intro": {
+    "message": "私は Vue.js エンジニアです。何を知りたいですか？",
+    "options": [
+      { "label": "スキル", "next": "skills" },
+      { "label": "制作物", "next": "works" },
+      { "label": "連絡方法", "next": "contact" }
+    ]
+  },
+  "skills": {
+    "message": "Vue / Python / AWS を扱えます！",
+    "options": [
+      { "label": "戻る", "next": "intro" }
+    ]
+  },
+  "works": {
+    "message": "GitHub に複数公開中です👇",
+    "options": [
+      { "label": "GitHub を開く", "link": "https://github.com/yourname" },
+      { "label": "戻る", "next": "intro" }
+    ]
+  },
+  "contact": {
+    "message": "お問い合わせは X(Twitter) の DM へ 📨",
+    "options": [
+      { "label": "戻る", "next": "intro" }
+    ]
+  },
+  "end": {
+    "message": "またお会いしましょう！"
+  }
+} 
