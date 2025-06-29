@@ -20,6 +20,10 @@ jobs:
           node-version: 18
 
       - run: npm ci
+
+      - name: Check Tailwind dependencies
+        run: npm ls tailwindcss @tailwindcss/postcss
+        
       - run: npm run build
 
       - name: Upload dist
