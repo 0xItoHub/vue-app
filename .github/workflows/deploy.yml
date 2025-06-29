@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]     # ← main に push したら発火
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -11,16 +11,15 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-      # ↓ これで **run: …** のカレントディレクトリがすべて ./vue-app になる
       run:
-        working-directory: ./vue-app
+        working-directory: ./vue-app   # ← run: コマンドだけに効く
 
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +29,8 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: ./vue-app/package-lock.json
+          # ↓ ルートから見た package-lock.json のパスを指定
+          cache-dependency-path: vue-app/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -39,12 +39,12 @@ jobs:
         run: npm ls tailwindcss @tailwindcss/postcss
 
       - name: Build
-        run: npm run build       # → ./vue-app/dist に出力
+        run: npm run build              # ← ./vue-app で実行される
 
       - name: Upload dist
         uses: actions/upload-pages-artifact@v3
         with:
-          path: vue-app/dist     # ← ルートから見た相対パスで指定
+          path: vue-app/dist            # ← 生成物の場所
 
   deploy:
     needs: build
