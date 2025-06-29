@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]        # ← main へ push 時に実行
+    branches: [ main ]          # main へ push で実行
 
 permissions:
   contents: read
@@ -19,32 +19,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ① ソース取得
+      # 1) ソース取得
       - uses: actions/checkout@v4
 
-      # ② Node セットアップ（依存キャッシュは後からでも追加可）
+      # 2) Node セットアップ
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          # ↓ lock ファイルをコミットしているならキャッシュを有効化できる
+          # cache: npm
+          # cache-dependency-path: package-lock.json
 
-      # ③ 依存インストール
+      # 3) 依存インストール
       - name: Install dependencies
         run: npm ci
 
-      # ④ Tailwind 依存確認（デバッグ用。不要なら削除可）
+      # 4) Tailwind 依存確認（任意）
       - name: Check Tailwind dependencies
         run: npm ls tailwindcss @tailwindcss/postcss
 
-      # ⑤ ビルド
+      # 5) ビルド
       - name: Build
-        run: npm run build        # → dist/ が生成される
+        run: npm run build          # → dist/ が生成
 
-      # ⑥ dist を GitHub Pages 用アーティファクトとしてアップロード
+      # 6) ★ デバッグ：埋め込まれたアセットパスを 10 行だけ出力
+      - name: Show asset paths (debug)
+        run: |
+          grep -Eo 'href="[^"]+\.css"|src="[^"]+\.js"' dist/index.html | head
+
+      # 7) dist を Pages 用アーティファクトとしてアップロード
       - name: Upload dist
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist              # ルート直下の dist を指定
+          path: dist                # ルート直下の dist
 
   deploy:
     needs: build
