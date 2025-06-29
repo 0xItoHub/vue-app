@@ -1,4 +1,5 @@
 <template>
+  <div class="p-4 bg-green-500 text-white">Tailwind OK?</div>
   <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
     <main class="container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center">
       <!-- ヘッダー -->
