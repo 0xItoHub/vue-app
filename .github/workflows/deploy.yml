@@ -17,32 +17,41 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # ここで run: ステップの作業ディレクトリを vue-app/ に固定
     defaults:
       run:
-        working-directory: ./vue-app   # ← run: コマンドだけに効く
+        working-directory: vue-app
 
     steps:
+      # リポジトリをチェックアウト
       - uses: actions/checkout@v4
 
+      # Node セットアップ（キャッシュは任意）
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+          cache-dependency-path: vue-app/package-lock.json  # ルートからの相対パス
 
-
+      # 依存インストール（vue-app で実行される）
       - name: Install dependencies
         run: npm ci
 
+      # Tailwind 依存確認（デバッグ用・不要なら削除可）
       - name: Check Tailwind dependencies
         run: npm ls tailwindcss @tailwindcss/postcss
 
+      # ビルド（vue-app で実行される）
       - name: Build
-        run: npm run build              # ← ./vue-app で実行される
+        run: npm run build
 
+      # dist をアーティファクトとしてアップロード（パスはリポジトリルート基準）
       - name: Upload dist
         uses: actions/upload-pages-artifact@v3
         with:
-          path: vue-app/dist            # ← 生成物の場所
+          path: vue-app/dist
 
   deploy:
     needs: build
