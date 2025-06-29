@@ -5,5 +5,5 @@ import vue from "@vitejs/plugin-vue";
 //     → base に "/<REPO>/" を必ず指定
 export default defineConfig({
   plugins: [vue()],
-  base: "/my-portfolio-bot/",   // ←リポジトリ名と合わせる
+  base: "/vue-app/",   // ←リポジトリ名と合わせる
 }); 
